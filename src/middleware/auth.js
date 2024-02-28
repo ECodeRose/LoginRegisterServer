@@ -71,12 +71,19 @@ const comparePass = async (req, res, next) => {
 const verifyToken = async (req, res, next) => {
   try {
     const auth = req.headers["authorization"];
+    console.log(auth);
     if (auth && auth.startsWith("Bearer")) {
       const token = auth.split(" ")[1];
+      console.log(token);
       const decoded = jwt.verify(token, process.env.JWT_SECRET, {
         algorithms: ["HS256"],
       });
-      req.user = decoded;
+      console.log(decoded);
+      req.user = await User.findOne({
+        where: {
+          username: decoded.username,
+        },
+      });
       next();
     } else {
       return res.status(401).json({ message: "Invalid token" });
@@ -89,10 +96,11 @@ const verifyToken = async (req, res, next) => {
 };
 
 const adminOnly = async (req, res, next) => {
-  if (req.user.role === "ADMIN") {
+  console.log(req.user);
+  if (req.user.dataValues.role === "ADMIN") {
     next();
   } else {
-    res.status(404).json({ message: "not found" });
+    res.status(401).json({ message: "not authorised" });
   }
 };
 

@@ -8,6 +8,7 @@ const signupUser = async (req, res) => {
       username: req.body.username,
       email: req.body.email,
       password: req.body.password,
+      // role === "ADMIN" ? "ADMIN" : "USER",
     });
 
     res.status(201).json({

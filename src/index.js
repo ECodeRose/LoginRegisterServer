@@ -11,7 +11,7 @@ app.use(cors());
 app.use(userRouter);
 
 const syncTables = () => {
-  User.sync();
+  User.sync({ alter: true });
 };
 // Run the server
 app.listen(3002, () => {
